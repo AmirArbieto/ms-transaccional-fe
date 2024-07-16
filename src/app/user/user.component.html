@@ -1,0 +1,81 @@
+<app-menu></app-menu>
+<div class="container spacing-left spacing-top col-9 ps-5">
+    <h1 class="card-header">CRUD DE USUARIOS</h1>
+    <div class="card">
+        <div class="card-body">
+            <div>
+                <div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-4 mb-4">
+                            <input class="form-control" type="text" [(ngModel)]="filtro"
+                                placeholder="Buscar por nombre/apellido...">
+                        </div>
+                        <div class="col-sm-4 mb-4">
+                            <select name="searchDocumentType" class="form-control" [(ngModel)]="searchDocumentType"
+                                (change)="filterResults()">
+                                <option value="">Todos los registros</option>
+                                <option value="DNI">DNI</option>
+                                <option value="CNE">CNE</option>
+                                <!-- Agrega más opciones según sea necesario -->
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" routerLink="/user/agregar" class="btn btn-primary mb-4">Agregar
+                                Usuario</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" routerLink="/user/inactivos" class="btn btn-primary mb-4">Listar
+                                Inactivos</button>
+                        </div>
+                    </div>
+                    <div class="descomprimir">
+                        <button class="csv" (click)="exportToCSV()">Exportar a CSV</button>
+                        <button class="excel" (click)="exportToExcel()">Exportar a Excel</button>
+                        <button class="pdf" (click)="exportToPDF()">Exportar a PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="letra">
+            <div class="card" id="divResultado">
+                <div class="card-header">Resultado</div>
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nombres</th>
+                                <th>Apellido Paterno</th>
+                                <th>Apellido Materno</th>
+                                <th>Tipo de Documento</th>
+                                <th>Número de Documento</th>
+                                <th>Correo Electrónico</th>
+                                <th>Celular</th>
+                                <th>Celular Opcional</th>
+                                <!--<th>Estado</th>-->
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let user of filteredUsers">
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.lastname_paternal }}</td>
+                                <td>{{ user.lastname_maternal }}</td>
+                                <td>{{ user.document_type }}</td>
+                                <td>{{ user.document_number }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.phone }}</td>
+                                <td>{{ user.phone_optional }}</td>
+                                <!--<td>{{ user.status }}</td>-->
+
+                                <td>
+                                    <button (click)="updateUser(user)" class="btn btn-warning me-2"><i
+                                            class="bi bi-pencil"></i></button>
+                                    <button (click)="deleteUser(user)" class="btn btn-danger"><i
+                                            class="bi bi-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>

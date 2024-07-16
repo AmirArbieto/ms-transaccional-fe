@@ -1,0 +1,126 @@
+<app-menu></app-menu>
+<div class="container spacing-left spacing-top col-9 ps-5">
+  <h1 class="card-header">PERSONAL INSTITUCIONAL</h1>
+  <div class="card">
+    <div class="card-body">
+      <div>
+        <div>
+          <div class="mb-3 row">
+            <div class="col-sm-4 mb-4">
+              <div class="form-group">
+                <input id="searchInput" class="form-control" type="text"
+                  placeholder="Buscar por Nombre / N. Documento / Email" [(ngModel)]="searchTerm"
+                  (input)="onSearchInput()" (keydown)="preventInvalidInput($event)"
+                  [ngClass]="{'is-valid': isFirstCharacterValid, 'is-invalid': !isFirstCharacterValid && searchTerm !== ''}"
+                  required>
+                <div style="font-size: 1em;" *ngIf="searchMessage" class="input-notice">{{ searchMessage }}</div>
+              </div>
+            </div>
+            <div class="col-sm-4 mb-4">
+              <select name="searchDocumentType" class="form-control" [(ngModel)]="selectedDocumentType"
+                (change)="onDocumentTypeChange($event)">
+                <option value="">Todos los registros</option>
+                <option value="DNI">DNI</option>
+                <option value="CNE">CNE</option>
+                <!-- Agrega más opciones según sea necesario -->
+              </select>
+            </div>
+            <div class="col-sm-2 d-flex justify-content-end">
+              <button type="button" routerLink="/staff/agregar" class="btn btn-primary mb-4">
+                AGREGAR <i class="bi bi-person-plus"></i>
+              </button>
+            </div>
+            <div class="col-sm-2 d-flex justify-content-end">
+              <button type="button" routerLink="/staff/inactivos" class="btn btn-primary mb-4">
+                INACTIVOS <i class="bi bi-person-square"></i>
+              </button>
+            </div>
+          </div>
+          <div class="descomprimir">
+            <h6>Exportaciones</h6>
+            <button type="button" class="btn btn-outline-secondary" (click)="exportToCSV()">CSV</button>
+            <button type="button" class="btn btn-outline-success" (click)="exportToExcel()">EXCEL</button>
+            <button type="button" class="btn btn-outline-danger" (click)="exportToPDF()">PDF</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="letra">
+      <div class="card" id="divResultado">
+        <div class="card-header">Resultado</div>
+        <div class="card-body">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>N° Documento</th>
+                <th>Apellidos y Nombre</th>
+                <th>Correo Electrónico</th>
+                <th>Celular</th>
+                <th>Procedencia</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let staff of filteredStaffList">
+                <td>{{ staff.document_number }}</td>
+                <td>{{ staff.father_lastname }} {{ staff.mother_lastname }} {{ staff.name }}</td>
+                <td>{{ staff.email }}</td>
+                <td>{{ staff.phone }}</td>
+                <td>{{ staff.ubigeo.department }}, {{ staff.ubigeo.province }}, {{ staff.ubigeo.district }}</td>
+                <td>
+                  <button class="btn btn-warning me-2" [routerLink]="['/update', staff.id_institucional_staff]">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn btn-primary me-2" (click)="showStaffDetails(staff)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button *ngIf="staff.id_institucional_staff" class="btn btn-danger"
+                    (click)="deactivateStaff(staff.id_institucional_staff)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="col-3 mb-3">
+            <div class="form-group">
+                <select class="form-control" name="txtNumber" [(ngModel)]="size" (ngModelChange)="changeSize()">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                </select>
+            </div>
+        </div>
+          <ngb-pagination [collectionSize]="totalElements" [page]="page" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="changePage($event)" />
+          <div class="background-overlay" [hidden]="!showAlert"
+            style="position: fixed; top: -0%; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center;">
+            <div class="alert alert-danger" role="alert">
+              Se ha eliminado con éxito el registro seleccionado
+            </div>
+          </div>
+          <div  class="background-overlay" [hidden]="!showDatas" style="position: fixed; top: 0%; left: 0; right: 0; display: flex; justify-content: center; align-items: center;">
+            <div class="alert alert-success" role="alert">
+              <button type="button" class="btn-close" aria-label="Close" style="float: right;"  (click)="closeAlert()"></button>
+              <p class="uppercase"><strong>Doc Identificador:</strong> {{ selectedStaff?.document_type }} - {{ selectedStaff?.document_number }}</p>              
+              <p class="uppercase"><strong>Apellidos y Nombre:</strong> {{ selectedStaff?.father_lastname }} {{ selectedStaff?.mother_lastname }} {{ selectedStaff?.name }}</p>
+              <p class="uppercase"><strong>Correo Electrónico:</strong> {{ selectedStaff?.email }}</p>
+              <p class="uppercase"><strong>Celular:</strong> {{ selectedStaff?.phone }}</p>              
+              <p class="uppercase"><strong>Dirección:</strong> {{ selectedStaff?.address }}</p>
+              <p class="uppercase"><strong>Género:</strong> {{ selectedStaff?.sex === 'M' ? 'MASCULINO' : (selectedStaff?.sex === 'F' ? 'FEMENINO' : 'Otro valor') }}</p>
+              <p class="uppercase"><strong>Estado civil:</strong> {{ selectedStaff?.civil_status === 'S' ? 'SOLTERO' : (selectedStaff?.civil_status === 'C' ? 'CASADO' : 'Otro valor') }}</p>
+              <p class="uppercase"><strong>Pais:</strong> {{ selectedStaff?.country }}</p>
+              <p class="uppercase"><strong>Idioma de origen:</strong> {{ selectedStaff?.native_language }}</p>
+              <p class="uppercase"><strong>UBIGEO actual:</strong> {{ selectedStaff?.ubigeo.department }}, {{ selectedStaff?.ubigeo.province }}, {{ selectedStaff?.ubigeo.district }}</p>
+              <p class="uppercase"><strong>Nivel de Educación:</strong> {{ selectedStaff?.instruction_grade }}</p>
+              <p class="uppercase"><strong>¿Tiene discapacidad?:</strong> {{ selectedStaff?.disability }}</p>
+              <p class="uppercase" *ngIf="selectedStaff?.disability !== 'No'"><strong>Tipo de Discapacidad:</strong> {{ selectedStaff?.disability_type }}</p>              
+              <p class="uppercase"><strong>¿Esta trabajando??:</strong> {{ selectedStaff?.work_condition }}</p>
+              <p class="uppercase" *ngIf="selectedStaff?.work_condition !== 'No'"><strong>Ocupacion:</strong> {{ selectedStaff?.occupation }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

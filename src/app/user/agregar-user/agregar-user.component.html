@@ -1,0 +1,89 @@
+<app-menu></app-menu>
+<div class="container container-min spacing-left spacing-top p-4">
+    <h1>Agregar Usuario</h1>
+    <form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
+        <div class="row">
+            <div class="form-group">
+                <label for="txtName">NOMBRE:</label>
+                <input type="text" class="form-control" name="txtName" id="txtName" required [(ngModel)]="newUser.name"
+                    (input)="onNameInputChange($event)"
+                    [ngClass]="{'is-valid': nameColor === 'green', 'is-invalid': nameColor === 'red'}">
+                <div [style.color]="nameColor">{{ nameMessage }}</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="txtLastnamePaternal">APELLIDO PATERNO:</label>
+            <input type="text" class="form-control" name="txtLastnamePaternal" id="txtLastnamePaternal" required
+                [(ngModel)]="newUser.lastname_paternal" (input)="onLastnamePaternalInputChange($event)"
+                [ngClass]="{'is-valid': lastnamePaternalColor === 'green', 'is-invalid': lastnamePaternalColor === 'red'}">
+            <div [style.color]="lastnamePaternalColor">{{ lastnamePaternalMessage }}</div>
+        </div>
+
+        <div class="form-group">
+            <label for="txtLastnameMaternal">APELLIDO MATERNO:</label>
+            <input type="text" class="form-control" name="txtLastnameMaternal" id="txtLastnameMaternal" required
+                [(ngModel)]="newUser.lastname_maternal" (input)="onLastnameMaternalInputChange($event)"
+                [ngClass]="{'is-valid': lastnameMaternalColor === 'green', 'is-invalid': lastnameMaternalColor === 'red'}">
+            <div [style.color]="lastnameMaternalColor">{{ lastnameMaternalMessage }}</div>
+        </div>
+
+        <div class="form-group">
+            <label for="txtBirthdate">FECHA DE NACIMIENTO:</label>
+            <input type="date" class="form-control" name="txtBirthdate" id="txtBirthdate" required
+                   [(ngModel)]="newUser.birthdate" (input)="onBirthdateChange($event)"
+                   [ngClass]="{'is-valid': birthdateColor === 'green', 'is-invalid': birthdateColor === 'red'}">
+            <div [style.color]="birthdateColor">{{ birthdateMessage }}</div>
+          </div>
+
+        <div class="form-group">
+            <label for="txtDocumentType">TIPO DE DOCUMENTO:</label>
+            <select class="form-control" name="txtDocumentType" id="txtDocumentType" required
+                [(ngModel)]="newUser.document_type" (change)="onDocumentTypeChange(newUser.document_type)">
+                <option value="" disabled selected>Elegir documento</option>
+                <option value="DNI">DNI</option>
+                <option value="CNE">CNE</option>
+            </select>
+            <div [style.color]="documentTypeColor">{{ documentTypeMessage }}</div>
+        </div>
+
+        <div class="form-group">
+            <label for="txtDocumentNumber">NÚMERO DE DOCUMENTO:</label>
+            <input type="text" class="form-control" name="txtDocumentNumber" id="txtDocumentNumber" required
+                [(ngModel)]="newUser.document_number" (input)="onDocumentNumberChange($event)"
+                [ngClass]="{'is-valid': documentNumberColor === 'green', 'is-invalid': documentNumberColor === 'red'}">
+            <div [style.color]="documentNumberColor">{{ documentNumberMessage }}</div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label for="txtEmail">CORREO ELECTRÓNICO:</label>
+                <input type="email" class="form-control" name="txtEmail" id="txtEmail" required
+                    [(ngModel)]="newUser.email" (input)="onEmailChange($event)"
+                    [ngClass]="{'is-valid': emailColor === 'green', 'is-invalid': emailColor === 'red'}">
+                <div [style.color]="emailColor">{{ emailMessage }}</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="txtPhone">CELULAR:</label>
+            <input type="text" class="form-control" name="txtPhone" id="txtPhone" required [(ngModel)]="newUser.phone"
+                (input)="onPhoneChange($event)"
+                [ngClass]="{'is-valid': phoneColor === 'green', 'is-invalid': phoneColor === 'red'}">
+            <div [style.color]="phoneColor">{{ phoneMessage }}</div>
+        </div>
+
+        <div class="form-group">
+            <label for="txtPhoneOptional">CELULAR OPCIONAL:</label>
+            <input type="text" class="form-control" name="txtPhoneOptional" id="txtPhoneOptional"
+                [(ngModel)]="newUser.phone_optional" (input)="onphoneOptionalChange($event)"
+                [ngClass]="{'is-valid': phoneOptionalColor === 'green', 'is-invalid': phoneOptionalColor === 'red'}">
+            <div [style.color]="phoneOptionalColor">{{ phoneOptionalMessage }}</div>
+        </div>
+
+        
+        <button class="btn btn-primary mt-4" [disabled]="userForm.invalid" style="margin: 5px; width: 150px; height: 30px;"> Agregar Usuario </button>
+        <button type="button" class="btn btn-secondary mt-4" (click)="cancelar()" style="margin: 5px; width: 100px; height: 30px;"> Cancelar </button>
+
+    </form>
+</div>

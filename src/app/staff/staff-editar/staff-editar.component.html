@@ -1,0 +1,312 @@
+<app-menu></app-menu>
+<style>
+    .is-invalid {
+        border-color: red;
+    }
+
+    .is-valid {
+        border-color: green;
+    }
+</style>
+<div class="container spacing-top p-1">
+
+    <div class="container bg-white my-5 rounded-5 text-secondary shadow custom-padding"
+        style="width: 70rem; margin-left: 20%;">
+        <div class="card-body">
+            <form (ngSubmit)="onSaveChanges(form)" #form="ngForm">
+                <div class="row">
+                    <div class="container">
+                        <h3 class="text-center">EDITAR PERSONAL</h3>
+                    </div>
+                    <!-- Alertas de éxito y error -->
+                    <div class="background-overlay" [hidden]="!showSuccessAlert"
+                        style="position: fixed; top: -0%; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center;">
+                        <div class="alert alert-success" role="alert">
+                            Se ha actualizado con éxito el registro seleccionado
+                        </div>
+                    </div>
+
+                    <div [hidden]="!showErrorAlert"
+                        style="position: fixed; top: -60%; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center;">
+                        <div class="alert alert-danger" role="alert">
+                            ¡ERROR!
+                        </div>
+                    </div>
+
+                    <div [hidden]="!showEmptyFieldsAlert"
+                        style="position: fixed; top: -60%; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center;">
+                        <div class="alert alert-warning" role="alert">
+                            Todos los campos son obligatorios. Por favor, complete todos los campos.
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mb-3 text-center d-flex justify-content-center">
+                        <img src="https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_1280.png" alt="Usuario"
+                            width="150" height="150" class="align-self-center">
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="txtDocument_type">TIPO DOC:</label>
+                            <select class="form-control" name="txtDocument_type" id="txtDocument_type"
+                                [(ngModel)]="editStaff.document_type" (change)="onDocumentTypeChange()"
+                                [ngClass]="{'is-valid': editStaff.document_type}">
+                                <option value="" disabled selected>Seleccionar tipo de documento</option>
+                                <option value="DNI">DNI</option>
+                                <option value="CNE">CNE</option>
+                            </select>
+                            <div id="selectNotice" class="select-notice"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtDocument_number">N° DOCUMENTO:</label>
+                            <input type="text" class="form-control" name="txtDocument_number" id="txtDocument_number"
+                                placeholder="Escribe número de documento" [(ngModel)]="editStaff.document_number"
+                                [maxLength]="documentTypeMaxLength" (input)="onDocumentNumberInput()"
+                                [ngClass]="{'is-invalid': isInvalid, 'is-valid': isValid}"
+                                (keydown)="preventNonNumeric($event)" required>
+                            <div id="documentNumberNotice" class="input-notice"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3 mb-3">
+                        <div class="form-group">
+                            <label for="txtName">NOMBRE:</label>
+                            <input placeholder="" type="text" class="form-control" name="txtName" id="txtName"
+                                [(ngModel)]="editStaff.name" (input)="onNameInput()"
+                                (keydown)="preventNonAlphabetic($event)"
+                                [ngClass]="{'is-valid': isNameValid, 'is-invalid': isNameInvalid}" required>
+                            <div id="namesNotice" class="input-notice"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-3 mb-3">
+                        <div class="form-group">
+                            <label for="txtFather_lastname">APELLIDO PATERNO:</label>
+                            <input placeholder="" type="text" class="form-control" name="txtFather_lastname"
+                                id="txtFather_lastname" [(ngModel)]="editStaff.father_lastname"
+                                (input)="onFather_lastnameInput()" (keydown)="preventNonAlphabetic($event)"
+                                [ngClass]="{'is-valid': isFather_lastnameValid, 'is-invalid': isFather_lastnameInvalid}"
+                                required>
+                            <div id="lastNamesNotice" class="input-notice"></div>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <div class="form-group">
+                            <label for="txtMother_lastname">APELLIDO MATERNO:</label>
+                            <input placeholder="" type="text" class="form-control" name="txtMother_lastname"
+                                id="txtMother_lastname" [(ngModel)]="editStaff.mother_lastname"
+                                (input)="onMother_lastnameInput()" (keydown)="preventNonAlphabetic($event)"
+                                [ngClass]="{'is-valid': isMother_lastnameValid, 'is-invalid': isMother_lastnameInvalid}"
+                                required>
+                            <div id="lastNamesNotice" class="input-notice"></div>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <div class="form-group">
+                            <label for="txtSex">SEXO:</label>
+                            <select class="form-control" name="txtSex" id="txtSex" [(ngModel)]="editStaff.sex"
+                                (change)="onSexChange()"
+                                [ngClass]="{'is-valid': isSexValid, 'is-invalid': isSexInvalid}" required>
+                                <option value="" disabled selected>Seleccionar género</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3 mb-3">
+                        <label for="txtCountry">PAIS:</label>
+                        <select class="form-control" name="txtCountry" id="txtCountry" [(ngModel)]="editStaff.country"
+                            (change)="onCountryChange()"
+                            [ngClass]="{'is-valid': isCountryValid, 'is-invalid': isCountryInvalid}" required>
+                            <option value="" disabled selected>Seleccionar Pais</option>
+                            <option value="Perú">Perú</option>
+                            <option value="Argentina">Argentina</option>
+                            <option value="Brasil">Brasil</option>
+                            <option value="Chile">Chile</option>
+                            <option value="Colombia">Colombia</option>
+                            <option value="México">México</option>
+                            <option value="Canadá">Canadá</option>
+                            <option value="Estados Unidos">Estados Unidos</option>
+                            <option value="Reino Unido">Reino Unido</option>
+                            <option value="Francia">Francia</option>
+                            <option value="Alemania">Alemania</option>
+                            <option value="Italia">Italia</option>
+                            <option value="España">España</option>
+                            <option value="Australia">Australia</option>
+                            <option value="Japón">Japón</option>
+                            <option value="Corea del Sur">Corea del Sur</option>
+                            <option value="China">China</option>
+                            <option value="India">India</option>
+                            <option value="Rusia">Rusia</option>
+                            <option value="Sudáfrica">Sudáfrica</option>
+                            <option value="Nigeria">Nigeria</option>
+                            <option value="Egipto">Egipto</option>
+                            <option value="Arabia Saudita">Arabia Saudita</option>
+                            <option value="Turquía">Turquía</option>
+                            <option value="Nueva Zelanda">Nueva Zelanda</option>
+                        </select>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <label for="txtUbigeo">UBIGEO:</label>
+                        <select class="form-control" name="txtUbigeo" id="txtUbigeo" [(ngModel)]="editStaff.ubigeo.id"
+                            (change)="onUbigeoChange()"
+                            [ngClass]="{'is-valid': isUbigeoValid, 'is-invalid': isUbigeoInvalid}" required>
+                            <option value="" disabled selected>Seleccionar UBIGEO</option>
+                            <option *ngFor="let ubicacion of ubigeoList" [value]="ubicacion.id">{{ ubicacion.department
+                                }}, {{ ubicacion.province }}, {{ ubicacion.district }}</option>
+                        </select>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <label for="txtCivil_status">ESTADO CIVIL:</label>
+                        <select class="form-control" name="txtCivil_status" id="txtCivil_status"
+                            [(ngModel)]="editStaff.civil_status" (change)="onCivil_statusChange()"
+                            [ngClass]="{'is-valid': isCivil_statusValid, 'is-invalid': isCivil_statusInvalid}" required>
+                            <option value="" disabled selected>Seleccionar estado civil</option>
+                            <option value="S">Soltero</option>
+                            <option value="C">Casado</option>
+                        </select>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <div class="form-group">
+                            <label for="txtNative_language">IDIOMA DE ORIGEN:</label>
+                            <select class="form-control" name="txtNative_language" id="txtNative_language"
+                                [(ngModel)]="editStaff.native_language" (change)="onNative_languageChange()"
+                                [ngClass]="{'is-valid': isNative_languageValid, 'is-invalid': isNative_languageInvalid}"
+                                required>
+                                <option value="" disabled selected>Seleccionar idioma</option>
+                                <option value="Español">Español</option>
+                                <option value="Ingles">Ingles</option>
+                                <option value="Quechua">Quechua</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3 mb-3">
+                        <div class="form-group">
+                            <label for="txtPhone">TELEFONO:</label>
+                            <input type="text" class="form-control" name="txtPhone" maxlength="9"
+                                (input)="onPhoneInput()" (keydown)="preventInvalidPhoneInput($event)"
+                                [(ngModel)]="editStaff.phone"
+                                [ngClass]="{'is-valid': isPhoneValid, 'is-invalid': isPhoneInvalid}" placeholder=""
+                                required>
+                            <div id="phoneNotice" class="input-notice"></div>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <div class="form-group">
+                            <label for="txtEmail">EMAIL:</label>
+                            <input placeholder="example@gmail.com" type="text" class="form-control" name="txtEmail"
+                                id="txtEmail" [(ngModel)]="editStaff.email" (input)="onEmailInput()" required
+                                [ngClass]="{'is-valid': isEmailValid, 'is-invalid': isEmailInvalid}">
+                            <div id="emailNotice" class="input-notice"></div>
+                            <div class="invalid-feedback" *ngIf="isEmailInvalid">
+                                El formato del email no es válido.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <div class="form-group">
+                            <label for="txtAddress">DIRECCION:</label>
+                            <input placeholder="" type="text" class="form-control" name="txtAddress" id="txtAddress"
+                                [(ngModel)]="editStaff.address" (input)="onAddressInput()" required [ngClass]="{
+                                   'is-valid': isAddressValid && editStaff.address.length > 0,
+                                   'is-invalid': isAddressInvalid || (editStaff.address.length > 0 && editStaff.address.includes('@'))
+                                 }">
+                            <div id="addressNotice" class="input-notice"></div>
+                            <div class="invalid-feedback"
+                                *ngIf="isAddressInvalid || (editStaff.address.length > 0 && editStaff.address.includes('@'))">
+                                La dirección no puede contener '@'.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <div class="form-group">
+                            <label for="txtInstruction_grade">NIVEL DE EDUCACIÓN:</label>
+                            <select class="form-control" name="txtInstruction_grade" id="txtInstruction_grade"
+                                [(ngModel)]="editStaff.instruction_grade" (change)="onInstruction_gradeChange()"
+                                [ngClass]="{'is-valid': isInstruction_gradeValid, 'is-invalid': isInstruction_gradeInvalid}"
+                                required>
+                                <option value="" disabled selected>Seleccionar nivel</option>
+                                <option value="Primaria">Primaria</option>
+                                <option value="Secundaria">Secundaria</option>
+                                <option value="Técnico">Técnico</option>
+                                <option value="Universitario">Universitario</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3 mb-3">
+                        <div class="form-group">
+                            <label for="txtDisability">¿TIENE DISCAPACIDAD?</label>
+                            <select class="form-control" name="txtDisability" id="txtDisability"
+                                [(ngModel)]="editStaff.disability" (change)="onDisability_typeChange()"
+                                [ngClass]="{'is-valid': isDisabilityValid, 'is-invalid': isDisabilityInvalid}" required>
+                                <option value="" disabled selected>Seleccionar una opción</option>
+                                <option value="Si">Si</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <div class="form-group">
+                            <label for="txtDisability_type">TIPO DE DISCAPACIDAD:</label>
+                            <input type="text" class="form-control" name="txtDisability_type" id="txtDisability_type"
+                                [disabled]="editStaff.disability && editStaff.disability === 'No'"
+                                [(ngModel)]="editStaff.disability_type" (input)="onDisability_typeChange()" required
+                                [ngClass]="{
+                                   'is-valid': isDisability_typeValid && editStaff.disability_type.length > 0,
+                                   'is-invalid': isDisability_typeInvalid
+                                 }">
+                            <div id="disabilityNotice" class="input-notice"></div>
+                            <div class="invalid-feedback" *ngIf="isDisability_typeInvalid">
+                                La discapacidad no puede contener '@'.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <div class="form-group">
+                            <label for="txtWork_condition">¿ESTA TRABAJANDO?:</label>
+                            <select class="form-control" name="txtWork_condition" id="txtWork_condition"
+                                [(ngModel)]="editStaff.work_condition" (change)="onWork_conditionChange()"
+                                [ngClass]="{'is-valid': isWork_conditionValid, 'is-invalid': isWork_conditionInvalid}"
+                                required>
+                                <option value="" disabled selected>Seleccionar una opción</option>
+                                <option value="Si">Si</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <div class="form-group">
+                            <label for="txtOccupation">OCUPACIÓN:</label>
+                            <input type="text" class="form-control" name="txtOccupation" id="txtOccupation"
+                                [disabled]="editStaff.work_condition && editStaff.work_condition === 'No'"
+                                [(ngModel)]="editStaff.occupation" (input)="onOccupationInput()" required [ngClass]="{
+                                   'is-valid': isOccupationValid && editStaff.occupation.length > 0,
+                                   'is-invalid': isOccupationInvalid
+                                 }">
+                            <div id="occupationNotice" class="input-notice"></div>
+                            <div class="invalid-feedback" *ngIf="isOccupationInvalid">
+                                La ocupación no puede contener '@'.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div hidden>
+                    <input value="A" type="text" class="form-control" name="txtState" [(ngModel)]="editStaff.state"
+                        required>
+                </div>
+                <div class="col-12 mb-3">
+                    <button type="submit" class="btn btn-success w-100" name="accion" value="Guardar">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

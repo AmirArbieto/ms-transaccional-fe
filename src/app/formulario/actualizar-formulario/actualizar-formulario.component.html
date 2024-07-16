@@ -1,0 +1,47 @@
+<app-menu></app-menu>
+<div class="container container-min spacing-left spacing-top p-4">
+    <h1>Actualizar Formulario</h1>
+    <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="txtUserId">USUARIO:</label>
+            <select class="form-control" name="txtUserId" id="txtUserId" [(ngModel)]="contactForm.userId"
+                (change)="onUserIdChange($event)"
+                [ngClass]="{'is-valid': userIdColor === 'green', 'is-invalid': userIdColor === 'red'}">
+                <option value="" disabled selected>Seleccionar usuario</option>
+                <option *ngFor="let user of users" [value]="user.id">{{user.name + ' __ ' + user.document_type + ' : ' + user.document_number }}</option>
+            </select>
+            <div [style.color]="userIdColor">{{ userIdMessage }}</div>
+        </div>
+
+        
+
+        <div class="form-group">
+            <label for="studyProgramId">Programa de Estudio</label>
+            <select id="studyProgramId" [(ngModel)]="contactForm.studyProgramId" name="studyProgramId" (change)="onStudyProgramIdChange($event)" class="form-control" [ngClass]="{'is-valid': studyProgramIdColor === 'green', 'is-invalid': studyProgramIdColor === 'red'}">
+              <option value="">Selecciona un programa</option>
+              <option value="Computación">Computación</option>
+              <option value="Electricidad">Electricidad</option>
+              <option value="Industria Alimentaria">Industria Alimentaria</option>
+              <option value="Confección Textil">Confección Textil</option>
+              <option value="Peluquería">Peluquería</option>
+              <option value="Hoteleria y Turismo">Hoteleria y Turismo</option>
+              <option value="Manualidades">Manualidades</option>
+            </select>
+            <div *ngIf="studyProgramIdMessage" [style.color]="studyProgramIdColor">{{ studyProgramIdMessage }}</div>
+          </div>
+
+        <div class="form-group">
+            <label for="txtDescription">DESCRIPCIÓN:</label>
+            <input type="text" class="form-control" name="txtDescription" id="txtDescription"
+                [(ngModel)]="contactForm.description" (input)="onDescriptionChange($event)"
+                [ngClass]="{'is-valid': descriptionColor === 'green', 'is-invalid': descriptionColor === 'red'}">
+            <div [style.color]="descriptionColor">{{ descriptionMessage }}</div>
+        </div>
+
+        
+        
+
+        <button class="btn btn-primary mt-4" [disabled]="areFieldsEmpty()" style="margin: 5px; width: 150px; height: 30px;"> Guardar Formulario </button>
+        <button type="button" class="btn btn-secondary mt-4" (click)="cancelar()" style="margin: 5px; width: 150px; height: 30px;"> Cancelar </button>
+    </form>
+</div>

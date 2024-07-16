@@ -1,0 +1,160 @@
+<body [ngClass]="{'dark-mode': isDarkMode, 'menu-open': !isSidebarClosed}">
+    <nav aria-label="navbar" class="navbar">
+        <div class="logo_item">
+            <i class="bx bx-menu menu-icon" (click)="toggleSidebar()"></i>
+            <img src="assets/colegio_logo.png" alt="Colegio Alfonso Ugarte N°20191" />
+            CETPRO Artemio Dolorier Abregú
+        </div>
+
+        <!-- <div class="search_bar">
+            <input type="text" placeholder="Search">
+        </div> !-->
+
+
+        <div class="navbar_content">
+            <strong>
+              <i class="bx" [ngClass]="{'bx-sun': isDarkMode, 'bx-moon': !isDarkMode}" (click)="toggleDarkMode()"></i>
+            </strong>
+          
+            <div class="profile-container" (click)="toggleProfileMenu()">
+              <img src="assets/profile.jpg" alt="Profile" class="profile" />
+            </div>
+          
+            <div *ngIf="isProfileMenuOpen" class="popover absolute bottom-full right-0 z-20 mb-1 mr-2 w-48 overflow-hidden rounded-lg border bg-custom-blue p-1.5 shadow-lg outline-none opacity-100 translate-y-0" role="menu">
+              <nav role="none">
+                <a class="menu-item flex gap-2 rounded p-2.5 text-sm cursor-pointer focus:ring-0 group items-center text-white" role="menuitem" (click)="logout()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" class="icon-md">
+                    <path fill="currentColor" fill-rule="evenodd" d="M6 4a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4a1 1 0 1 1 0 2H6a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h4a1 1 0 1 1 0 2zm9.293 3.293a1 1 0 0 1 1.414 0l4 4a1 1 0 0 1 0 1.414l-4 4a1 1 0 0 1-1.414-1.414L17.586 13H11a1 1 0 1 1 0-2h6.586l-2.293-2.293a1 1 0 0 1 0-1.414" clip-rule="evenodd"></path>
+                  </svg>
+                  Cerrar sesión
+                </a>
+              </nav>
+            </div>
+          </div>
+          
+
+    </nav>
+
+    <!-- sidebar -->
+    <main [ngClass]="{'dark-mode': isDarkMode}">
+        <nav aria-label="nav" class="sidebar" [ngClass]="{'close': isSidebarClosed, 'hoverable': isSidebarHoverable}">
+            <div class="menu_content">
+                <ul class="menu_items">
+                    <div class="menu_title menu_dashboard"></div>
+                    <!-- duplicate or remove this li tag if you want to add or remove navlink with submenu -->
+                    <!-- start -->
+                    <li class="item">
+                        <a href=" " class="nav_link">
+                            <span class="navlink_icon">
+                                <i class="bx bxs-magic-wand"></i>
+                            </span>
+                            <span class="navlink">Dashboard</span>
+                        </a>
+                    </li>
+                    <!-- end -->
+                </ul>
+
+                <ul class="menu_items">
+                    <li class="item">
+                        <a [routerLink]="['/formulario']" class="nav_link">
+                            <span class="navlink_icon">
+                                <i class='bx bx-task'></i>
+                            </span>
+                            <span class="navlink">FORMULARIO</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a [routerLink]="['/person']" class="nav_link">
+                            <span class="navlink_icon">
+                                <i class='bx bxs-user-pin'></i>
+                            </span>
+                            <span class="navlink">Apoderado</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a [routerLink]="['/user']" class="nav_link">
+                            <span class="navlink_icon">
+                                <i class="bx bx-cloud-upload"></i>
+                            </span>
+                            <span class="navlink">USUARIO</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a [routerLink]="['/staff']" class="nav_link">
+                            <span class="navlink_icon">
+                                <i class="bx bx-cloud-upload"></i>
+                            </span>
+                            <span class="navlink">PERSONAL</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="menu_items">
+                    <div class="menu_title menu_setting"></div>
+                    <li class="item">
+                        <a class="nav_link">
+                            <span class="navlink_icon">
+                                <i class="bx bx-flag"></i>
+                            </span>
+                            <span class="navlink">Activity</span>
+                        </a>
+                    </li>
+
+                    <!-- Sub menu para tesorería -->
+                    <li class="item">
+                        <div class="nav_link submenu_item" (click)="toggleTreasurySubmenu()">
+                            <span class="navlink_icon">
+                                <i class="bx bx-home-alt"></i>
+                            </span>
+                            <span class="navlink">Treasury</span>
+                            <i class="bx bx-chevron-right arrow-left" *ngIf="isTreasurySubmenuOpen"></i>
+                        </div>
+                        <ul class="menu_items submenu" *ngIf="isTreasurySubmenuOpen">
+                            <li class="item">
+                                <a href="#" class="nav_link sublink">Voucher</a>
+                            </li>
+                            <li class="item">
+                                <a class="nav_link sublink">APAFA payments</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- End -->
+
+                    <li class="item">
+                        <a [routerLink]="['/payment_apafa']" class="nav_link">
+                            <span class="navlink_icon">
+                                <i class="bx bx-cog"></i>
+                            </span>
+                            <span class="navlink">APAFA payments</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a [routerLink]="['/pagina-web']" class="nav_link">
+                            <span class="navlink_icon">
+                                <i class='bx bx-news'></i>
+                            </span>
+                            <span class="navlink">PAGINA WEB</span>
+                        </a>
+                    </li>
+                </ul>
+
+
+
+
+
+                <!-- Sidebar Open / Close -->
+                <div class="bottom_content">
+                    <div class="bottom expand_sidebar" (click)="expandSidebar()">
+                        <span>Expandir Menú</span>
+                        <i class="bx bx-log-in"></i>
+                    </div>
+                    <div class="bottom collapse_sidebar" (click)="collapseSidebar()">
+                        <span>Ocultar Menú</span>
+                        <i class="bx bx-log-out"></i>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </main>
+
+</body>

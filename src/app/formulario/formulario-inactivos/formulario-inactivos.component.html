@@ -1,0 +1,72 @@
+<app-menu></app-menu>
+<div class="container spacing-left spacing-top col-9 ps-5">
+    <h1 class="card-header">CRUD DE FORMULARIOS DE CONTACTO</h1>
+    <div class="card">
+        <div class="card-body">
+            <div>
+                <div class="mb-3 row">
+                    <div class="col-sm-4 mb-4">
+                        <input class="form-control" type="text" [(ngModel)]="filtro"
+                            placeholder="Buscar por descripción...">
+                    </div>
+                    <div class="col-sm-4 mb-4">
+                        <select name="statusFilter" class="form-control" [(ngModel)]="statusFilter"
+                            (change)="filterResults()">
+                            <option value="">Todos los registros</option>
+                            <option value="A">Activos</option>
+                            <option value="I">Inactivos</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="button" routerLink="/formulario" class="btn btn-primary mb-4">Listar
+                            Activos</button>
+                    </div>
+                </div>
+                <div class="descomprimir">
+                    <button class="csv" (click)="exportToCSV()">Exportar a CSV</button>
+                    <button class="excel" (click)="exportToExcel()">Exportar a Excel</button>
+                    <button class="pdf" (click)="exportToPDF()">Exportar a PDF</button>
+                </div>
+            </div>
+        </div>
+        <div class="letra">
+            <div class="card" id="divResultado">
+                <div class="card-header">Resultado</div>
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Descripción</th>
+                                <th>Programa de Estudio</th>
+                                <!--<th>Estado</th>-->
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let form of filteredForms">
+                                <!--<td>
+                                    <select [(ngModel)]="form.userId" class="form-control">
+                                        <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+                                    </select>
+                                </td>-->
+                                <td>{{ userMap[form.userId] || form.userId }}</td>
+                                <td>{{ form.description }}</td>
+                                <td>{{ form.studyProgramId }}</td>
+                                <!--<td>{{ form.status }}</td>-->
+                                <td>
+                                    <button (click)="restoreForm(form)" class="btn btn-warning me-2">
+                                        <i class="bi bi-arrow-90deg-left"></i>
+                                    </button>
+                                    <button (click)="deletePermanently(form)" class="btn btn-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

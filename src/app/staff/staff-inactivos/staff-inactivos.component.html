@@ -1,0 +1,91 @@
+<app-menu></app-menu>
+<style>
+    .valid-input {
+        border-color: green;
+    }
+
+    .invalid-input {
+        border-color: red;
+    }
+</style>
+<div class="container spacing-left spacing-top col-9 ps-5">
+    <h1 class="card-header">PERSONAL INSTITUCIONAL - INACTIVOS</h1>
+    <div class="card">
+        <div class="card-body">
+            <div>
+                <div class="mb-3 row">
+                    <div class="col-sm-4 mb-4">
+                        <input class="form-control" type="text" placeholder="Buscar por Nombre / N. Documento / Email"
+                            [(ngModel)]="searchTerm" (input)="filterStaff()" (keydown)="preventInvalidInput($event)"
+                            [ngClass]="{'is-valid': isFirstCharacterValid, 'is-invalid': !isFirstCharacterValid && searchTerm !== ''}"
+                            required>
+                        <div style="font-size: 1em;" *ngIf="searchMessage" class="input-notice">{{ searchMessage }}
+                        </div>
+                    </div>
+                    <div class="col-sm-4 mb-4">
+                        <select name="searchDocumentType" class="form-control" [(ngModel)]="selectedDocumentType"
+                            (change)="onDocumentTypeChange($event)">
+                            <option value="">Todos los registros</option>
+                            <option value="DNI">DNI</option>
+                            <option value="CNE">CNE</option>
+                            <!-- Agrega más opciones según sea necesario -->
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="button" routerLink="/staff" class="btn btn-primary mb-4">
+                            ACTIVOS <i class="bi bi-person-check"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="descomprimir">
+                    <h6>Exportaciones</h6>
+                    <button type="button" class="btn btn-outline-secondary" (click)="exportToCSV()">CSV</button>
+                    <button type="button" class="btn btn-outline-success" (click)="exportToExcel()">Excel</button>
+                    <button type="button" class="btn btn-outline-danger" (click)="exportToPDF()">PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="letra">
+        <div class="card" id="divResultado">
+            <div class="card-header">Resultado</div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombres</th>
+                            <th>Número de Documento</th>
+                            <th>Correo Electrónico</th>
+                            <th>Celular</th>
+                            <th>Procedencia</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let staff of filteredStaffList">
+                            <td>{{ staff.document_number }}</td>
+                            <td>{{ staff.father_lastname }} {{ staff.mother_lastname }} {{ staff.name }}</td>
+                            <td>{{ staff.email }}</td>
+                            <td>{{ staff.phone }}</td>
+                            <td>{{ staff.ubigeo.department }}, {{ staff.ubigeo.province }}, {{ staff.ubigeo.district }}
+                            </td>
+                            <td>
+                                <button *ngIf="staff.id_institucional_staff" class="btn btn-success btn-sm"
+                                    (click)="activateStaff(staff.id_institucional_staff)">
+                                    <i class="bi bi-arrow-90deg-left"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="background-overlay" [hidden]="!showActivateAlert"
+                    style="position: fixed; top: -0%; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center;">
+                    <div class="alert alert-success" role="alert">
+                        Se ha activado con éxito el registro seleccionado
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+.spacing-left {
+    margin-left: 280px;
+}
+
+.spacing-top {
+    margin-top: 90px;
+}
+
+.container-min {
+    width: 70%;
+}
+
+.is-valid {
+    border-color: #28a745;
+    border-width: 4px;
+    /* Aumenta el ancho del borde */
+}
+
+.is-invalid {
+    border-color: #dc3545;
+    border-width: 4px;
+    /* Aumenta el ancho del borde */
+}
