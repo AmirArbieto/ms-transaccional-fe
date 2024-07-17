@@ -9,7 +9,7 @@ import { ubigeoLista } from '../interfaces/ubigeoLista';
 })
 export class UbigeoService {
 
-  private apiBaseUrl = 'http://localhost:8085/ubigeo'
+  private apiBaseUrl = 'https://friendly-happiness-v47v5gxq75xcp6wj-8081.app.github.dev/ubigeo'
 
   
   constructor(private http: HttpClient) { }
